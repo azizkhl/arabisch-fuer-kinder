@@ -510,6 +510,19 @@ html, body {
   font-weight: 800;
 }
 
+.letter-nav {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.letter-nav .btn {
+  flex: 1;
+  font-size: 0.95rem;
+  padding: 12px;
+}
+
 .action-buttons {
   display: flex;
   flex-direction: column;
