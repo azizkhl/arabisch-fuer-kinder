@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="de" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Arabisch für Kinder – Eine super spaßige App zum Lernen von Lesen, Schreiben und Aussprache!">
+  <meta name="theme-color" content="#ff6b35">
+  <title>🌟 Arabisch für Kinder – Super Fun Learning!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐪</text></svg>">
+</head>
+<body>
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Splash / Home -->
+  <div id="screen-home" class="screen active">
+    <div class="stars-bg"></div>
+    <div class="home-content">
+      <div class="mascot-container">
+        <div class="mascot bounce">🐪</div>
+        <div class="speech-bubble">Marhaba! 👋</div>
+      </div>
+      <h1 class="app-title">Arabisch<br><span>für Kinder</span></h1>
+      <p class="tagline">Lernen • Schreiben • Sprechen • Spaß haben!</p>
+      
+      <div class="stats-bar">
+        <div class="stat">
+          <span class="stat-icon">⭐</span>
+          <span id="total-stars">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-icon">🏆</span>
+          <span id="levels-done">0</span>/12
+        </div>
+      </div>
+
+      <button class="btn btn-primary btn-large" onclick="showScreen('map')">
+        <span>Los geht's!</span>
+        <span class="btn-emoji">🚀</span>
+      </button>
+      
+      <div class="home-links">
+        <button class="btn btn-secondary" onclick="showScreen('about')">Über die App</button>
+        <button class="btn btn-secondary" onclick="resetProgress()">Neu starten</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level Map -->
+  <div id="screen-map" class="screen">
+    <header class="top-bar">
+      <button class="btn-icon" onclick="showScreen('home')">🏠</button>
+      <h2>Abenteuer-Karte</h2>
+      <div class="stars-mini">⭐ <span id="map-stars">0</span></div>
+    </header>
+    
+    <div class="map-container">
+      <div class="path"></div>
+      <div id="levels-grid" class="levels-grid">
+        <!-- Levels injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Letter Learning Screen -->
+  <div id="screen-letter" class="screen">
+    <header class="top-bar">
+      <button class="btn-icon" onclick="showScreen('map')">←</button>
+      <h2 id="letter-title">Buchstabe</h2>
+      <button class="btn-icon" id="btn-speak-letter" onclick="speakCurrentLetter()">🔊</button>
+    </header>
+    
+    <div class="letter-main">
+      <div class="letter-display">
+        <div class="big-letter" id="big-letter">ا</div>
+        <div class="letter-name" id="letter-name">Alif</div>
+        <div class="letter-sound" id="letter-sound">wie "aa" in Vater</div>
+      </div>
+
+      <div class="forms-row">
+        <div class="form-card">
+          <div class="form-label">Allein</div>
+          <div class="form-letter" id="form-isolated">ا</div>
+        </div>
+        <div class="form-card">
+          <div class="form-label">Anfang</div>
+          <div class="form-letter" id="form-initial">ا</div>
+        </div>
+        <div class="form-card">
+          <div class="form-label">Mitte</div>
+          <div class="form-letter" id="form-medial">ا</div>
+        </div>
+        <div class="form-card">
+          <div class="form-label">Ende</div>
+          <div class="form-letter" id="form-final">ا</div>
+        </div>
+      </div>
+
+      <div class="example-box">
+        <div class="example-label">Beispielwort</div>
+        <div class="example-arabic" id="example-arabic">أَسَد</div>
+        <div class="example-translit" id="example-translit">asad</div>
+        <div class="example-meaning" id="example-meaning">🦁 Löwe</div>
+        <button class="btn btn-speak" onclick="speakExample()">🔊 Anhören</button>
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn btn-primary" onclick="startWriting()">✍️ Schreiben üben</button>
+        <button class="btn btn-accent" onclick="startQuiz()">🎯 Quiz starten</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Writing Practice -->
+  <div id="screen-writing" class="screen">
+    <header class="top-bar">
+      <button class="btn-icon" onclick="backFromWriting()">←</button>
+      <h2>Schreib-Übung</h2>
+      <button class="btn-icon" onclick="clearCanvas()">🗑️</button>
+    </header>
+    
+    <div class="writing-area">
+      <div class="guide-letter" id="guide-letter">ا</div>
+      <canvas id="write-canvas" width="320" height="320"></canvas>
+      <p class="hint">Zeichne den Buchstaben nach! (Rechts → Links)</p>
+      
+      <div class="writing-controls">
+        <button class="btn btn-secondary" onclick="clearCanvas()">Löschen</button>
+        <button class="btn btn-primary" onclick="finishWriting()">Fertig! ⭐</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quiz Screen -->
+  <div id="screen-quiz" class="screen">
+    <header class="top-bar">
+      <button class="btn-icon" onclick="showScreen('map')">←</button>
+      <h2>Quiz-Zeit!</h2>
+      <div class="quiz-progress"><span id="quiz-current">1</span>/<span id="quiz-total">5</span></div>
+    </header>
+    
+    <div class="quiz-content">
+      <div class="quiz-question" id="quiz-question">Welcher Buchstabe ist das?</div>
+      <div class="quiz-display" id="quiz-display">ب</div>
+      
+      <div class="quiz-options" id="quiz-options">
+        <!-- Options injected -->
+      </div>
+      
+      <div class="quiz-feedback" id="quiz-feedback"></div>
+    </div>
+  </div>
+
+  <!-- Level Complete -->
+  <div id="screen-complete" class="screen">
+    <div class="complete-content">
+      <div class="trophy">🏆</div>
+      <h2>Level geschafft!</h2>
+      <p id="complete-message">Du bist ein Superstar!</p>
+      <div class="stars-earned">
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+        <span class="star">⭐</span>
+      </div>
+      <p class="stars-text">+ <span id="earned-stars">3</span> Sterne</p>
+      <button class="btn btn-primary btn-large" onclick="showScreen('map')">Weiter zur Karte</button>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div id="screen-about" class="screen">
+    <header class="top-bar">
+      <button class="btn-icon" onclick="showScreen('home')">←</button>
+      <h2>Über die App</h2>
+      <div></div>
+    </header>
+    <div class="about-content">
+      <div class="mascot small">🐪</div>
+      <h3>Arabisch für Kinder</h3>
+      <p>Eine bunte und spaßige App, die Kindern Arabisch beibringt – Lesen, Schreiben und Aussprache!</p>
+      <ul>
+        <li>📚 28 arabische Buchstaben</li>
+        <li>🔊 Aussprache mit Sprachausgabe</li>
+        <li>✍️ Schreib-Übungen</li>
+        <li>🎯 Lustige Quizzes</li>
+        <li>⭐ Sterne & Level-System</li>
+        <li>🎮 Gamification & Belohnungen</li>
+      </ul>
+      <p class="credit">Mit ❤️ gemacht für neugierige Kinder.<br>Open Source auf GitHub.</p>
+      <p class="tip">Tipp: Am besten auf dem Tablet oder Smartphone nutzen!</p>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
